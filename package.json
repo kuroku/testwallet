@@ -10,6 +10,9 @@
   },
   "dependencies": {
     "compression": "^1.7.1",
+    "express": "^4.17.1",
+    "jwt-simple": "^0.5.6",
+    "mongoose": "^5.10.6",
     "polka": "next",
     "sirv": "^1.0.0"
   },
