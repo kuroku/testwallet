@@ -1,6 +1,5 @@
 <script>
-  import { goto, stores } from '@sapper/app'
-  const { session } = stores();
+  import { goto } from '@sapper/app'
   import Button from '../components/Button.svelte'
   import axios from 'axios'
   let email = '';
@@ -8,7 +7,6 @@
   function submit() {
     axios.get(`/api/user/${email}&${password}`)
     .then(res => {
-      session.set({...res.data.doc})
       goto(`/wallet/${res.data.token}`)
     })
     .catch(err => {
