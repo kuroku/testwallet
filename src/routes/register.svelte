@@ -6,7 +6,6 @@
   function submit() {
     axios.post('/api/user', { name, dni, doc, email, password })
     .then(res => {
-      session.set({...res.data.doc})
       goto(`/wallet/${res.data.token}`)
     })
     .catch((err) => {
