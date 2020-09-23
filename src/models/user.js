@@ -35,7 +35,34 @@ function findByEmail(email, callback) {
 }
 
 function findByID(id, callback) {
-  return Model.findById(id, callback)
+  return Model.findById(id).select('-password').populate({
+    path: 'transactions', 
+    select: 'amount status -_id',
+    populate: {
+      path: 'to from',
+      select: 'email name -_id'
+    }
+  }).exec(callback)
 }
 
-export default { create, findByEmail, findByAuth, findByID }
+function updateByID(id, nv, callback) {
+  return Model.findByIdAndUpdate(id, {$set: nv}, callback)
+}
+
+function addTranx(id, users, callback) {
+  return Model.updateMany({$or: users}, {$addToSet: {transactions: id }}, callback)
+}
+
+function debitTransaction(to, from, amount, callback) {
+  Model.findById(to, (err, doc) => {
+    updateByID(to, {amount: doc.amount + amount}, err => {
+      Model.findById(from, (err, doc) => {
+        updateByID(from, {amount: doc.amount - amount}, err => {
+          callback()
+        })
+      })
+    })
+  })
+}
+
+export default { create, findByEmail, findByAuth, findByID, updateByID, addTranx, debitTransaction }

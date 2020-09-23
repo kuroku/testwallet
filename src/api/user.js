@@ -3,10 +3,11 @@ import auth from './auth'
 import { decodeAuthentication } from '../assets/middlewares'
 import jwt from '../assets/jwt'
 import { user } from '../models'
+import transaction from './transaction'
 const api = Router()
 api
+.use('/transaction', transaction)
 .use('/auth/:token', decodeAuthentication, auth)
-
 .post('/', (req, res) => {
   const { body } = req
   user.create(body, (err, doc) => {
@@ -14,7 +15,6 @@ api
     res.status(200).send({ doc, token: jwt.create(doc._id) })
   })
 })
-
 .get('/:email&:password', (req, res) => {
   const { email, password } = req.params
   user.findByAuth(email, password, (err, doc) => {
@@ -23,7 +23,6 @@ api
     res.status(200).send({ doc, token: jwt.create(doc._id) })
   })
 })
-
 .get('/:email', (req, res) => {
   let { email } = req.params
   user.findByEmail(email, (err, doc) => {
@@ -32,4 +31,5 @@ api
     res.status(200).send(doc)
   })
 })
+
 export default api

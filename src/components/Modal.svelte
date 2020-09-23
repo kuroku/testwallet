@@ -11,7 +11,7 @@
 
 <style>
   dialog {
-    max-width: 860px;
+    max-width: 600px;
     width: calc(100% - 64px);
     max-height: 560px;
     height: calc(100% - 64px);
