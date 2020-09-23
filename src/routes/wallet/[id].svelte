@@ -19,19 +19,21 @@
 	let token
 	let amount = 0;
 	$: total = user.amount + amount
-	$: {
-		console.log(amount)
-	}
 	onMount(() => {
 		localStorage.token = token
 	})
 	let { transactions } = user
+	let aux = []
+	$:{
+		console.log(aux)
+	}
+	$:tranx = [...transactions, ...aux]
 	export { user, token }
 </script>
 <main id="wallet">
 	<Appbar title="Wallet" amount={total}/>
 	<section>
-		{#each transactions as {to, from, amount, status}}
+		{#each tranx as {to, from, amount, status}}
 			<article>
 				<h1>Pago con un monto: ${amount}</h1>
 				<h6>De: {from.email == user.email ? 'Mi' : from.email }</h6>
@@ -47,7 +49,7 @@
 		</menu>
 	</section>
 	<Recharger bind:open={recharger} on:success={e => amount+=e.detail}/>
-	<Pay bind:open={pay} on:success={({detail}) => transactions.push({to: {email: detail.to}, from: {email: user.email}, amount: detail.amount, status: 'wait'})}/>
+	<Pay bind:open={pay} on:success={(e) => aux = [...aux, {to: { email: e.detail.to}, from: { email: user.email}, amount: e.detail.amount, status: 'wait'}]}/>
 </main>
 
 <style>
